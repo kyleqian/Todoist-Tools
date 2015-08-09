@@ -38,14 +38,14 @@ do ($=jQuery) ->
 						args: {
 							project_id: project.id,
 							content: activeURL,
-							date_string: null
+							date_string: "today"
 						}
 					}
 				])
 				$.getJSON syncURL, syncParams, (response) ->
 					syncParams.seq_no = response.seq_no
 					syncParams.seq_no_global = response.seq_no_global
-					window.alert "Added link to \"Ideas\""
+					window.alert "Added link to \"#{settings.projectName}\""
 		return false # to prevent default action
 
 	S4 = () ->

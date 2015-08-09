@@ -41,14 +41,14 @@
               args: {
                 project_id: project.id,
                 content: activeURL,
-                date_string: null
+                date_string: "today"
               }
             }
           ]);
           return $.getJSON(syncURL, syncParams, function(response) {
             syncParams.seq_no = response.seq_no;
             syncParams.seq_no_global = response.seq_no_global;
-            return window.alert("Added link to \"Ideas\"");
+            return window.alert("Added link to \"" + settings.projectName + "\"");
           });
         }
       });

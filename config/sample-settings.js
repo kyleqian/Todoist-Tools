@@ -4,7 +4,7 @@
 	apiKey: "ENTER API KEY",
 	email: "ENTER TODOIST EMAIL",
 	password: "ENTER TODOIST PASSWORD",
-	projectName: "Ideas",
+	projectName: "Inbox",
 	saveToProjectBind: "ctrl+s"
   };
 }).call(this);
