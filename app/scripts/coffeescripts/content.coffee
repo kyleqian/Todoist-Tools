@@ -34,6 +34,7 @@ do ($=jQuery) ->
 					{
 						type: "item_add",
 						uuid: uuid,
+						temp_id: uuid,
 						args: {
 							project_id: project.id,
 							content: activeURL,
