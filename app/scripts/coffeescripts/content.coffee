@@ -29,14 +29,11 @@ do ($=jQuery) ->
 					project = p
 					break
 			if project
-				delete syncParams.resource_types
-				delete syncParams.seq_no
-				delete syncParams.seq_no_global
+				uuid = (S4() + S4() + "-" + S4() + "-4" + S4().substr(0,3) + "-" + S4() + "-" + S4() + S4() + S4()).toLowerCase()
 				syncParams.commands = JSON.stringify([
 					{
 						type: "item_add",
-						temp_id: "0",
-						uuid: "b28eea80-3e29-11e5-b970-0800200c9a66",
+						uuid: uuid,
 						args: {
 							project_id: project.id,
 							content: activeURL,
@@ -47,5 +44,8 @@ do ($=jQuery) ->
 				$.getJSON syncURL, syncParams, (response) ->
 					syncParams.seq_no = response.seq_no
 					syncParams.seq_no_global = response.seq_no_global
-					window.alert "SUCCESS!"
+					window.alert "Added link to \"Ideas\""
 		return false # to prevent default action
+
+	S4 = () ->
+		return (((1+Math.random())*0x10000)|0).toString(16).substring(1)
