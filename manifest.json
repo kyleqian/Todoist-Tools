@@ -1,0 +1,21 @@
+{
+  "manifest_version": 2,
+ 
+  "name": "Todoist Tools",
+  "description": "Toolset for Todoist",
+  "version": "1.0",
+
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["/lib/jquery-1.11.3.min.js", "/lib/jquery.hotkeys.js", "/config/settings.js", "/app/scripts/content.js"],
+      "match_about_blank": true,
+      "all_frames": true
+    }
+  ],
+
+  "permissions": [
+    "tabs",
+    "activeTab"
+   ]
+}
