@@ -5,6 +5,11 @@
   "description": "Toolset for Todoist",
   "version": "1.0",
 
+  "browser_action": {
+   "default_icon": "/app/images/icon.png",
+   "default_popup": "/app/views/popup.html"
+  },
+
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
@@ -13,6 +18,15 @@
       "all_frames": true
     }
   ],
+
+  "commands": {
+    "_execute_browser_action": {
+      "suggested_key": {
+        "default": "Alt+Q",
+        "mac": "MacCtrl+Q"
+      }
+    }
+  },
 
   "permissions": [
     "tabs",

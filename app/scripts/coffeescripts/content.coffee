@@ -19,14 +19,19 @@ do ($=jQuery) ->
 		token: settings.apiKey
 	}
 
+	if !chrome.runtime.onMessage.hasListener()
+		chrome.runtime.onMessage.addListener (message, sender) ->
+			# CHECK MESSAGE KEYS
+			saveItemToProject(message.text)
+
 	# saves URL to Indox as "Today"
 	$(window).bind "keydown", settings.saveToProjectBind, (e) ->
 		activeURL = window.location.href # URL of current window
-		saveItemToProject(activeURL, settings.projectName, "today")
+		saveItemToProject(activeURL)
 		return false # to prevent default action
 
 	# saves string as an item to a project with specified due date
-	saveItemToProject = (item, projectName, date) ->
+	saveItemToProject = (item, projectName="Inbox", date="today") ->
 		$.getJSON syncURL, getParams, (response) ->
 			# what to do with these seq_no?
 			# getParams.seq_no = response.seq_no
@@ -52,13 +57,12 @@ do ($=jQuery) ->
 				])
 				$.getJSON syncURL, setParams, (response) ->
 					for k,v of response.SyncStatus
-						console.log v
 						if "error_tag" in v
 							window.alert "Error!"
 							return
 					# defaultParams.seq_no = response.seq_no
 					# defaultParams.seq_no_global = response.seq_no_global
-					window.alert "Added link to \"#{settings.projectName}\""
+					window.alert "Added link to \"#{projectName}\""
 
 	# hacky
 	S4 = () ->

@@ -19,13 +19,24 @@
     setParams = {
       token: settings.apiKey
     };
+    if (!chrome.runtime.onMessage.hasListener()) {
+      chrome.runtime.onMessage.addListener(function(message, sender) {
+        return saveItemToProject(message.text);
+      });
+    }
     $(window).bind("keydown", settings.saveToProjectBind, function(e) {
       var activeURL;
       activeURL = window.location.href;
-      saveItemToProject(activeURL, settings.projectName, "today");
+      saveItemToProject(activeURL);
       return false;
     });
     saveItemToProject = function(item, projectName, date) {
+      if (projectName == null) {
+        projectName = "Inbox";
+      }
+      if (date == null) {
+        date = "today";
+      }
       return $.getJSON(syncURL, getParams, function(response) {
         var i, len, p, project, ref, uuid;
         project = null;
@@ -56,13 +67,12 @@
             ref1 = response.SyncStatus;
             for (k in ref1) {
               v = ref1[k];
-              console.log(v);
               if (indexOf.call(v, "error_tag") >= 0) {
                 window.alert("Error!");
                 return;
               }
             }
-            return window.alert("Added link to \"" + settings.projectName + "\"");
+            return window.alert("Added link to \"" + projectName + "\"");
           });
         }
       });
