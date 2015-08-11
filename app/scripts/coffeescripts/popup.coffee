@@ -2,6 +2,8 @@ do ($=jQuery) ->
 	document.addEventListener "DOMContentLoaded", ->
 		input = $(".inputText")
 		button = $(".submitButton")
+		enterKey = 13
+		
 		button.click ->
 			text = input.val()
 			input.val("")
@@ -9,7 +11,7 @@ do ($=jQuery) ->
 
 		input.keypress (e) ->
 			key = e.which
-			if key is 13
+			if key is enterKey
 				text = input.val()
 				input.val("")
 				sendInputToActiveContentScript(text)

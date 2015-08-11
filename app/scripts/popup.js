@@ -2,9 +2,10 @@
 (function() {
   (function($) {
     return document.addEventListener("DOMContentLoaded", function() {
-      var button, input, sendInputToActiveContentScript;
+      var button, enterKey, input, sendInputToActiveContentScript;
       input = $(".inputText");
       button = $(".submitButton");
+      enterKey = 13;
       button.click(function() {
         var text;
         text = input.val();
@@ -14,7 +15,7 @@
       input.keypress(function(e) {
         var key, text;
         key = e.which;
-        if (key === 13) {
+        if (key === enterKey) {
           text = input.val();
           input.val("");
           return sendInputToActiveContentScript(text);
