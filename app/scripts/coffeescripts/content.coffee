@@ -3,9 +3,6 @@ do ($=jQuery) ->
 	if not settings of window
 		window.alert "ERROR! Must set settings.js -- see README"
 		throw "ERROR! Must set settings.js -- see README"
-	# jQuery.hotkeys.options.filterInputAcceptingElements = false
-	# jQuery.hotkeys.options.filterContentEditable = false
-	# jQuery.hotkeys.options.filterContentEditable = false
 
 	settings = window.settings
 	syncURL = "#{settings.apiBase}sync"
@@ -19,7 +16,7 @@ do ($=jQuery) ->
 		token: settings.apiKey
 	}
 
-	if !chrome.runtime.onMessage.hasListener()
+	if !chrome.runtime.onMessage.hasListeners()
 		chrome.runtime.onMessage.addListener (message, sender) ->
 			# CHECK MESSAGE KEYS
 			saveItemToProject(message.input)

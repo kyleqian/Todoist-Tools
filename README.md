@@ -11,4 +11,4 @@ The hotkey bindings are set to fire even within input elements (while typing, et
 	filterTextInputs: false
 	filterContentEditable: false
 
-TODO: Switch to OAuth; solve hotkeys on input feature; UUID/temp_id fix; switch to chrome.commands; put all handlers in background.js; multiple instances of onMessage.addListener (is it because of News-Tab??)
+TODO: Switch to OAuth; UUID/temp_id fix; switch to chrome.commands; put all handlers in background.js

@@ -19,7 +19,7 @@
     setParams = {
       token: settings.apiKey
     };
-    if (!chrome.runtime.onMessage.hasListener()) {
+    if (!chrome.runtime.onMessage.hasListeners()) {
       chrome.runtime.onMessage.addListener(function(message, sender) {
         return saveItemToProject(message.input);
       });
