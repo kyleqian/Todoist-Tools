@@ -21,7 +21,7 @@
     };
     if (!chrome.runtime.onMessage.hasListener()) {
       chrome.runtime.onMessage.addListener(function(message, sender) {
-        return saveItemToProject(message.text);
+        return saveItemToProject(message.input);
       });
     }
     $(window).bind("keydown", settings.saveToProjectBind, function(e) {
@@ -31,11 +31,17 @@
       return false;
     });
     saveItemToProject = function(item, projectName, date) {
+      if (item == null) {
+        item = null;
+      }
       if (projectName == null) {
         projectName = "Inbox";
       }
       if (date == null) {
         date = "today";
+      }
+      if (!item || item === "") {
+        return;
       }
       return $.getJSON(syncURL, getParams, function(response) {
         var i, len, p, project, ref, uuid;

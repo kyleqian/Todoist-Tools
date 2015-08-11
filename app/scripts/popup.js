@@ -2,18 +2,34 @@
 (function() {
   (function($) {
     return document.addEventListener("DOMContentLoaded", function() {
-      return $(".submitButton").click(function() {
+      var button, input, sendInputToActiveContentScript;
+      input = $(".inputText");
+      button = $(".submitButton");
+      button.click(function() {
         var text;
-        text = $(".inputText").val();
+        text = input.val();
+        input.val("");
+        return sendInputToActiveContentScript(text);
+      });
+      input.keypress(function(e) {
+        var key, text;
+        key = e.which;
+        if (key === 13) {
+          text = input.val();
+          input.val("");
+          return sendInputToActiveContentScript(text);
+        }
+      });
+      return sendInputToActiveContentScript = function(input) {
         return chrome.tabs.query({
           active: true,
           lastFocusedWindow: true
         }, function(tabs) {
           return chrome.tabs.sendMessage(tabs[0].id, {
-            text: text
+            input: input
           });
         });
-      });
+      };
     });
   })(jQuery);
 

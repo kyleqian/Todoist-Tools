@@ -22,7 +22,7 @@ do ($=jQuery) ->
 	if !chrome.runtime.onMessage.hasListener()
 		chrome.runtime.onMessage.addListener (message, sender) ->
 			# CHECK MESSAGE KEYS
-			saveItemToProject(message.text)
+			saveItemToProject(message.input)
 
 	# saves URL to Indox as "Today"
 	$(window).bind "keydown", settings.saveToProjectBind, (e) ->
@@ -31,7 +31,8 @@ do ($=jQuery) ->
 		return false # to prevent default action
 
 	# saves string as an item to a project with specified due date
-	saveItemToProject = (item, projectName="Inbox", date="today") ->
+	saveItemToProject = (item=null, projectName="Inbox", date="today") ->
+		return if not item or item is ""
 		$.getJSON syncURL, getParams, (response) ->
 			# what to do with these seq_no?
 			# getParams.seq_no = response.seq_no
