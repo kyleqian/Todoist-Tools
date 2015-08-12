@@ -3,7 +3,7 @@
   var indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
   (function($) {
-    var S4, addItemToProject, getParams, setParams, settings, syncHandler, syncURL;
+    var addItemToProject, generateUUID, getParams, setParams, settings, syncHandler, syncURL;
     if (!settings in window) {
       window.alert("ERROR! Must set settings.js -- see README");
       throw "ERROR! Must set settings.js -- see README";
@@ -92,7 +92,7 @@
     };
     addItemToProject = function(item, projectId, projectName, date) {
       var uuid;
-      uuid = (S4() + S4() + "-" + S4() + "-4" + S4().substr(0, 3) + "-" + S4() + "-" + S4() + S4() + S4()).toLowerCase();
+      uuid = generateUUID();
       setParams.commands = JSON.stringify([
         {
           type: "item_add",
@@ -118,8 +118,15 @@
         return window.alert("Added task to \"" + projectName + "\"");
       });
     };
-    return S4 = function() {
-      return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+    return generateUUID = function() {
+      return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(c) {
+        var r, ref, v;
+        r = Math.random() * 16 | 0;
+        v = (ref = c === "x") != null ? ref : {
+          r: r & 0x3 | 0x8
+        };
+        return v.toString(16);
+      });
     };
   })(jQuery);
 

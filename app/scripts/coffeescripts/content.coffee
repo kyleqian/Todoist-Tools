@@ -58,7 +58,7 @@ do ($=jQuery) ->
 					addItemToProject(item, project.id, projectName, date)
 
 	addItemToProject = (item, projectId, projectName, date) ->
-		uuid = (S4() + S4() + "-" + S4() + "-4" + S4().substr(0,3) + "-" + S4() + "-" + S4() + S4() + S4()).toLowerCase()
+		uuid = generateUUID()
 		setParams.commands = JSON.stringify([
 			{
 				type: "item_add",
@@ -78,7 +78,8 @@ do ($=jQuery) ->
 					return
 			window.alert "Added task to \"#{projectName}\""
 
-
-	# hacky
-	S4 = () ->
-		return (((1+Math.random())*0x10000)|0).toString(16).substring(1)
+	generateUUID = () ->
+		return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace /[xy]/g, (c) ->
+			r = Math.random()*16|0
+			v = c == "x" ? r : (r&0x3|0x8)
+			return v.toString(16)
