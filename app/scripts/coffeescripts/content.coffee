@@ -42,23 +42,19 @@ do ($=jQuery) ->
 						project = null
 						for p in response.Projects
 							if p.name == projectName
-								project = p
+								chrome.storage.local.set {inboxId: project.id}
+								addItemToProject(item, project.id, projectName, date)
 								break
-						if project
-							chrome.storage.local.set {inboxId: project.id}
-							addItemToProject(item, project.id, projectName, date)
 		else
 			$.getJSON syncURL, getParams, (response) ->
 				project = null
 				for p in response.Projects
 					if p.name == projectName
-						project = p
+						addItemToProject(item, project.id, projectName, date)
 						break
-				if project
-					addItemToProject(item, project.id, projectName, date)
 
 	addItemToProject = (item, projectId, projectName, date) ->
-		uuid = generateUUID()
+		uuid = "4"
 		setParams.commands = JSON.stringify([
 			{
 				type: "item_add",
@@ -73,13 +69,13 @@ do ($=jQuery) ->
 		])
 		$.getJSON syncURL, setParams, (response) ->
 			for k,v of response.SyncStatus
-				if "error_tag" in v
-					window.alert "Error!"
+				if "error" of v
+					window.alert "Sync error!"
 					return
 			window.alert "Added task to \"#{projectName}\""
 
 	generateUUID = () ->
 		return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace /[xy]/g, (c) ->
 			r = Math.random()*16|0
-			v = c == "x" ? r : (r&0x3|0x8)
+			v = if c == "x" then r else (r&0x3|0x8)
 			return v.toString(16)
