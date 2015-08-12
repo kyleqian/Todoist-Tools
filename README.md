@@ -10,5 +10,3 @@ The hotkey bindings are set to fire even within input elements (while typing, et
 	filterInputAcceptingElements: false
 	filterTextInputs: false
 	filterContentEditable: false
-
-TODO: Switch to OAuth; UUID/temp_id fix; switch to chrome.commands; put all handlers in background.js
