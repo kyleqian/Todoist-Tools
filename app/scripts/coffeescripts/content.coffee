@@ -42,6 +42,7 @@ do ($=jQuery) ->
 						project = null
 						for p in response.Projects
 							if p.name == projectName
+								# DO THE CALLBACK ON FAILURE THING
 								chrome.storage.local.set {inboxId: project.id}
 								addItemToProject(item, project.id, projectName, date)
 								break
@@ -54,7 +55,7 @@ do ($=jQuery) ->
 						break
 
 	addItemToProject = (item, projectId, projectName, date) ->
-		uuid = "4"
+		uuid = generateUUID()
 		setParams.commands = JSON.stringify([
 			{
 				type: "item_add",

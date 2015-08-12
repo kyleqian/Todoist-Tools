@@ -92,7 +92,7 @@
     };
     addItemToProject = function(item, projectId, projectName, date) {
       var uuid;
-      uuid = "4";
+      uuid = generateUUID();
       setParams.commands = JSON.stringify([
         {
           type: "item_add",
