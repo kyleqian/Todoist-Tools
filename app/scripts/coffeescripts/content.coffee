@@ -60,7 +60,7 @@ do ($=jQuery) ->
 							return
 					# defaultParams.seq_no = response.seq_no
 					# defaultParams.seq_no_global = response.seq_no_global
-					window.alert "Added link to \"#{projectName}\""
+					window.alert "Added task to \"#{projectName}\""
 
 	# hacky
 	S4 = () ->

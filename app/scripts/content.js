@@ -78,7 +78,7 @@
                 return;
               }
             }
-            return window.alert("Added link to \"" + projectName + "\"");
+            return window.alert("Added task to \"" + projectName + "\"");
           });
         }
       });
