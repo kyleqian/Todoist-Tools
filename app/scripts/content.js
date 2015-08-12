@@ -110,7 +110,7 @@
         ref = response.SyncStatus;
         for (k in ref) {
           v = ref[k];
-          if ("error" in v) {
+          if (v !== "ok") {
             window.alert("Sync error!");
             return;
           }

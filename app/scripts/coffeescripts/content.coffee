@@ -70,7 +70,7 @@ do ($=jQuery) ->
 		])
 		$.getJSON syncURL, setParams, (response) ->
 			for k,v of response.SyncStatus
-				if "error" of v
+				if v != "ok"
 					window.alert "Sync error!"
 					return
 			window.alert "Added task to \"#{projectName}\""
