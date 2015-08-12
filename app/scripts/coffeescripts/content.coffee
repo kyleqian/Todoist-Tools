@@ -16,18 +16,10 @@ do ($=jQuery) ->
 		token: settings.apiKey
 	}
 
-	chrome.runtime.onMessage.addListener (message, sender) ->
-		a = 2
-
 	if !chrome.runtime.onMessage.hasListeners()
-		console.log "HAS NOT"
 		chrome.runtime.onMessage.addListener (message, sender) ->
 			# CHECK MESSAGE KEYS
 			saveItemToProject(message.input)
-	else
-		console.log "HAS"
-
-	console.log "hi"
 
 	# saves URL to Indox as "Today"
 	$(window).bind "keydown", settings.saveToProjectBind, (e) ->

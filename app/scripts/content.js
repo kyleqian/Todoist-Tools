@@ -19,19 +19,11 @@
     setParams = {
       token: settings.apiKey
     };
-    chrome.runtime.onMessage.addListener(function(message, sender) {
-      var a;
-      return a = 2;
-    });
     if (!chrome.runtime.onMessage.hasListeners()) {
-      console.log("HAS NOT");
       chrome.runtime.onMessage.addListener(function(message, sender) {
         return saveItemToProject(message.input);
       });
-    } else {
-      console.log("HAS");
     }
-    console.log("hi");
     $(window).bind("keydown", settings.saveToProjectBind, function(e) {
       var activeURL;
       activeURL = window.location.href;
