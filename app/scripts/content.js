@@ -3,7 +3,7 @@
   var indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
   (function($) {
-    var S4, getParams, saveItemToProject, setParams, settings, syncURL;
+    var S4, addItemToProject, getParams, setParams, settings, syncHandler, syncURL;
     if (!settings in window) {
       window.alert("ERROR! Must set settings.js -- see README");
       throw "ERROR! Must set settings.js -- see README";
@@ -21,16 +21,16 @@
     };
     if (!chrome.runtime.onMessage.hasListeners()) {
       chrome.runtime.onMessage.addListener(function(message, sender) {
-        return saveItemToProject(message.input);
+        return syncHandler(message.input);
       });
     }
     $(window).bind("keydown", settings.saveToProjectBind, function(e) {
       var activeURL;
       activeURL = window.location.href;
-      saveItemToProject(activeURL);
+      syncHandler(activeURL);
       return false;
     });
-    saveItemToProject = function(item, projectName, date) {
+    syncHandler = function(item, projectName, date) {
       if (item == null) {
         item = null;
       }
@@ -43,44 +43,79 @@
       if (!item || item === "") {
         return;
       }
-      return $.getJSON(syncURL, getParams, function(response) {
-        var i, len, p, project, ref, uuid;
-        project = null;
-        ref = response.Projects;
-        for (i = 0, len = ref.length; i < len; i++) {
-          p = ref[i];
-          if (p.name === projectName) {
-            project = p;
-            break;
+      if (projectName === "Inbox") {
+        return chrome.storage.sync.get({
+          inboxId: ""
+        }, function(object) {
+          if (chrome.runtime.lastError) {
+            return window.alert("getStorage ERROR! => " + chrome.runtime.lastError);
+          } else if (object.inboxId !== "") {
+            return addItemToProject(item, object.inboxId, projectName, date);
+          } else {
+            return $.getJSON(syncURL, getParams, function(response) {
+              var i, len, p, project, ref;
+              project = null;
+              ref = response.Projects;
+              for (i = 0, len = ref.length; i < len; i++) {
+                p = ref[i];
+                if (p.name === projectName) {
+                  project = p;
+                  break;
+                }
+              }
+              if (project) {
+                chrome.storage.sync.set({
+                  inboxId: project.id
+                });
+                return addItemToProject(item, project.id, projectName, date);
+              }
+            });
+          }
+        });
+      } else {
+        return $.getJSON(syncURL, getParams, function(response) {
+          var i, len, p, project, ref;
+          project = null;
+          ref = response.Projects;
+          for (i = 0, len = ref.length; i < len; i++) {
+            p = ref[i];
+            if (p.name === projectName) {
+              project = p;
+              break;
+            }
+          }
+          if (project) {
+            return addItemToProject(item, project.id, projectName, date);
+          }
+        });
+      }
+    };
+    addItemToProject = function(item, projectId, projectName, date) {
+      var uuid;
+      uuid = (S4() + S4() + "-" + S4() + "-4" + S4().substr(0, 3) + "-" + S4() + "-" + S4() + S4() + S4()).toLowerCase();
+      setParams.commands = JSON.stringify([
+        {
+          type: "item_add",
+          uuid: uuid,
+          temp_id: uuid,
+          args: {
+            project_id: projectId,
+            content: item,
+            date_string: date
           }
         }
-        if (project) {
-          uuid = (S4() + S4() + "-" + S4() + "-4" + S4().substr(0, 3) + "-" + S4() + "-" + S4() + S4() + S4()).toLowerCase();
-          setParams.commands = JSON.stringify([
-            {
-              type: "item_add",
-              uuid: uuid,
-              temp_id: uuid,
-              args: {
-                project_id: project.id,
-                content: item,
-                date_string: date
-              }
-            }
-          ]);
-          return $.getJSON(syncURL, setParams, function(response) {
-            var k, ref1, v;
-            ref1 = response.SyncStatus;
-            for (k in ref1) {
-              v = ref1[k];
-              if (indexOf.call(v, "error_tag") >= 0) {
-                window.alert("Error!");
-                return;
-              }
-            }
-            return window.alert("Added task to \"" + projectName + "\"");
-          });
+      ]);
+      return $.getJSON(syncURL, setParams, function(response) {
+        var k, ref, v;
+        ref = response.SyncStatus;
+        for (k in ref) {
+          v = ref[k];
+          if (indexOf.call(v, "error_tag") >= 0) {
+            window.alert("Error!");
+            return;
+          }
         }
+        return window.alert("Added task to \"" + projectName + "\"");
       });
     };
     return S4 = function() {

@@ -19,48 +19,65 @@ do ($=jQuery) ->
 	if !chrome.runtime.onMessage.hasListeners()
 		chrome.runtime.onMessage.addListener (message, sender) ->
 			# CHECK MESSAGE KEYS
-			saveItemToProject(message.input)
+			syncHandler(message.input)
 
 	# saves URL to Indox as "Today"
 	$(window).bind "keydown", settings.saveToProjectBind, (e) ->
 		activeURL = window.location.href # URL of current window
-		saveItemToProject(activeURL)
+		syncHandler(activeURL)
 		return false # to prevent default action
 
 	# saves string as an item to a project with specified due date
-	saveItemToProject = (item=null, projectName="Inbox", date="today") ->
-		return if not item or item is ""
-		$.getJSON syncURL, getParams, (response) ->
-			# what to do with these seq_no?
-			# getParams.seq_no = response.seq_no
-			# getParams.seq_no_global = response.seq_no_global
-			project = null
-			for p in response.Projects
-				if p.name == projectName
-					project = p
-					break
-			if project
-				uuid = (S4() + S4() + "-" + S4() + "-4" + S4().substr(0,3) + "-" + S4() + "-" + S4() + S4() + S4()).toLowerCase()
-				setParams.commands = JSON.stringify([
-					{
-						type: "item_add",
-						uuid: uuid,
-						temp_id: uuid,
-						args: {
-							project_id: project.id,
-							content: item,
-							date_string: date
-						}
-					}
-				])
-				$.getJSON syncURL, setParams, (response) ->
-					for k,v of response.SyncStatus
-						if "error_tag" in v
-							window.alert "Error!"
-							return
-					# defaultParams.seq_no = response.seq_no
-					# defaultParams.seq_no_global = response.seq_no_global
-					window.alert "Added task to \"#{projectName}\""
+	syncHandler = (item=null, projectName="Inbox", date="today") ->
+		return if not item or item == ""
+
+		if projectName == "Inbox"
+			chrome.storage.sync.get {inboxId: ""}, (object) ->
+				if chrome.runtime.lastError
+					window.alert "getStorage ERROR! => #{chrome.runtime.lastError}"
+				else if object.inboxId != ""
+					addItemToProject(item, object.inboxId, projectName, date)
+				else
+					$.getJSON syncURL, getParams, (response) ->
+						project = null
+						for p in response.Projects
+							if p.name == projectName
+								project = p
+								break
+						if project
+							chrome.storage.sync.set {inboxId: project.id}
+							addItemToProject(item, project.id, projectName, date)
+		else
+			$.getJSON syncURL, getParams, (response) ->
+				project = null
+				for p in response.Projects
+					if p.name == projectName
+						project = p
+						break
+				if project
+					addItemToProject(item, project.id, projectName, date)
+
+	addItemToProject = (item, projectId, projectName, date) ->
+		uuid = (S4() + S4() + "-" + S4() + "-4" + S4().substr(0,3) + "-" + S4() + "-" + S4() + S4() + S4()).toLowerCase()
+		setParams.commands = JSON.stringify([
+			{
+				type: "item_add",
+				uuid: uuid,
+				temp_id: uuid,
+				args: {
+					project_id: projectId,
+					content: item,
+					date_string: date
+				}
+			}
+		])
+		$.getJSON syncURL, setParams, (response) ->
+			for k,v of response.SyncStatus
+				if "error_tag" in v
+					window.alert "Error!"
+					return
+			window.alert "Added task to \"#{projectName}\""
+
 
 	# hacky
 	S4 = () ->
