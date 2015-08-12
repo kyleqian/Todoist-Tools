@@ -32,7 +32,7 @@ do ($=jQuery) ->
 		return if not item or item == ""
 
 		if projectName == "Inbox"
-			chrome.storage.sync.get {inboxId: ""}, (object) ->
+			chrome.storage.local.get {inboxId: ""}, (object) ->
 				if chrome.runtime.lastError
 					window.alert "getStorage ERROR! => #{chrome.runtime.lastError}"
 				else if object.inboxId != ""
@@ -45,7 +45,7 @@ do ($=jQuery) ->
 								project = p
 								break
 						if project
-							chrome.storage.sync.set {inboxId: project.id}
+							chrome.storage.local.set {inboxId: project.id}
 							addItemToProject(item, project.id, projectName, date)
 		else
 			$.getJSON syncURL, getParams, (response) ->

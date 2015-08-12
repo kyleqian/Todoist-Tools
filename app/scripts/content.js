@@ -44,7 +44,7 @@
         return;
       }
       if (projectName === "Inbox") {
-        return chrome.storage.sync.get({
+        return chrome.storage.local.get({
           inboxId: ""
         }, function(object) {
           if (chrome.runtime.lastError) {
@@ -64,7 +64,7 @@
                 }
               }
               if (project) {
-                chrome.storage.sync.set({
+                chrome.storage.local.set({
                   inboxId: project.id
                 });
                 return addItemToProject(item, project.id, projectName, date);
