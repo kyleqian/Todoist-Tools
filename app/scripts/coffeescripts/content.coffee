@@ -39,19 +39,17 @@ do ($=jQuery) ->
 					addItemToProject(item, object.inboxId, projectName, date)
 				else
 					$.getJSON syncURL, getParams, (response) ->
-						project = null
 						for p in response.Projects
 							if p.name == projectName
 								# DO THE CALLBACK ON FAILURE THING
-								chrome.storage.local.set {inboxId: project.id}
-								addItemToProject(item, project.id, projectName, date)
+								chrome.storage.local.set {inboxId: p.id}
+								addItemToProject(item, p.id, projectName, date)
 								break
 		else
 			$.getJSON syncURL, getParams, (response) ->
-				project = null
 				for p in response.Projects
 					if p.name == projectName
-						addItemToProject(item, project.id, projectName, date)
+						addItemToProject(item, p.id, projectName, date)
 						break
 
 	addItemToProject = (item, projectId, projectName, date) ->

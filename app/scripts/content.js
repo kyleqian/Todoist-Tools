@@ -51,17 +51,16 @@
             return addItemToProject(item, object.inboxId, projectName, date);
           } else {
             return $.getJSON(syncURL, getParams, function(response) {
-              var i, len, p, project, ref, results;
-              project = null;
+              var i, len, p, ref, results;
               ref = response.Projects;
               results = [];
               for (i = 0, len = ref.length; i < len; i++) {
                 p = ref[i];
                 if (p.name === projectName) {
                   chrome.storage.local.set({
-                    inboxId: project.id
+                    inboxId: p.id
                   });
-                  addItemToProject(item, project.id, projectName, date);
+                  addItemToProject(item, p.id, projectName, date);
                   break;
                 } else {
                   results.push(void 0);
@@ -73,14 +72,13 @@
         });
       } else {
         return $.getJSON(syncURL, getParams, function(response) {
-          var i, len, p, project, ref, results;
-          project = null;
+          var i, len, p, ref, results;
           ref = response.Projects;
           results = [];
           for (i = 0, len = ref.length; i < len; i++) {
             p = ref[i];
             if (p.name === projectName) {
-              addItemToProject(item, project.id, projectName, date);
+              addItemToProject(item, p.id, projectName, date);
               break;
             } else {
               results.push(void 0);
